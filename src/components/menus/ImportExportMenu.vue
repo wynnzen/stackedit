@@ -33,8 +33,8 @@
     </menu-entry>
     <menu-entry @click.native="exportPdf">
       <icon-download slot="icon"></icon-download>
-      <div><div class="menu-entry__label" :class="{'menu-entry__label--warning': !isSponsor}">sponsor</div> Export as PDF</div>
-      <span>Produce a PDF from an HTML template.</span>
+      <div>Export as PDF</div>
+      <span>Open the print dialog and choose Save as PDF.</span>
     </menu-entry>
     <menu-entry @click.native="exportPandoc">
       <icon-download slot="icon"></icon-download>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import TurndownService from 'turndown/lib/turndown.browser.umd';
 import htmlSanitizer from '../../libs/htmlSanitizer';
 import MenuEntry from './common/MenuEntry';
@@ -76,7 +75,6 @@ export default {
   components: {
     MenuEntry,
   },
-  computed: mapGetters(['isSponsor']),
   methods: {
     async onImportMarkdown(evt) {
       const file = evt.target.files[0];
@@ -112,10 +110,9 @@ export default {
         await store.dispatch('modal/open', 'htmlExport');
       } catch (e) { /* Cancel */ }
     },
-    async exportPdf() {
-      try {
-        await store.dispatch('modal/open', 'pdfExport');
-      } catch (e) { /* Cancel */ }
+    exportPdf() {
+      window.print();
+      badgeSvc.addBadge('exportPdf');
     },
     async exportPandoc() {
       try {
